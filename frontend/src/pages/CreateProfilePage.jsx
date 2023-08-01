@@ -1,47 +1,64 @@
-import Nav from "../components/nav/nav.jsx";
+import React, { useState } from "react";
 import axios from "axios";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-const CreateProfilPage = () => {
-  const [refresh, setRefresh] = useState(true);
+import Nav from "../components/nav/nav";
+
+const CreateProfilePage = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const nav = useNavigate();
 
-  const createUser = async (e) => {
+  const signUp = async (e) => {
+    e.preventDefault();
+
     try {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      const response = await axios.post("/api/user/signup", formData);
-      setRefresh((prev) => !prev);
-      e.target.reset();
+      const response = await axios.post("/api/user/signup", {
+        name,
+        email,
+        password,
+      });
+      const { data } = response;
       nav("/LoginPage");
+      console.log("successful", data);
     } catch (error) {
-      console.log(error);
+      console.log(error, "Registration gescheitert");
     }
   };
 
   return (
-    <>
-      <Nav />
-      <main className="main-wrapper">
-        <h2>Create Profile</h2>
-
-        <form onSubmit={createUser}>
-          <input type="text" placeholder="Name" name="name" />
-          <input type="text" placeholder="Email" name="email" />
-          <input type="file" name="image" id="file" className="inputfile" />
-          <label htmlFor="file">Upload Image</label>
-          <input type="text" placeholder="Description" name="description" />
-          <input
-            type="text"
-            placeholder="password"
-            name="password"
-            id="password"
-          />
-          <button className="PublishBtn">Create Accout</button>
-        </form>
-      </main>
-    </>
+    <div>
+      <header>
+        <div>
+          <Nav />
+        </div>
+        <h1>Create a New Account</h1>
+      </header>
+      <h3>Please enter your data</h3>
+      <form onSubmit={signUp}>
+        <input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button type="submit">Create Account</button>
+      </form>
+    </div>
   );
 };
 
-export default CreateProfilPage;
+export default CreateProfilePage;

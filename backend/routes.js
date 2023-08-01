@@ -1,15 +1,15 @@
 
 import User from "./models/UserModel.js";
 import { Router } from "express";
-import { generateAccessToken } from "./authToken.js";
+//import { generateAccessToken } from "./authToken.js";
 
 
 export const userRouter = Router();
 
-// ============ für Cookie Haltbarkeit =====
+/* // ============ für Cookie Haltbarkeit =====
 const hoursInMillisek = (hours) => { return 1000 *  60 * 60 * hours;
 };
-
+ */
 
 // ! User ausgeben
 userRouter.get("/user/aut", async (req, res) => {
@@ -36,16 +36,14 @@ userRouter.post("/user/login", async (req, res) => {
   const passwordIsValid = user.verifyPassword(password);
   if (passwordIsValid) {
 
-    //===========TOKEN ==============
+/*     //===========TOKEN ==============
     const token = generateAccessToken({ email })
     console.log(token);
     res.cookie("auth", token, {httpOnly: true, maxAge: hoursInMillisek(4)})
     // Gültigkeit in millisek (4h)
     // mit httpOnly nicht für JS lesbar
-
+ */
     //next step middelware in auth datei
-
-
 
     res.send({ message: "Success", data: user });
   } else {
@@ -60,6 +58,17 @@ userRouter.post("/user/login", async (req, res) => {
 // ! JSON Web Token
 // wie ein schlüssel mit Ablaufdatum, Token wird immer mit 3 Sektionen erstellt. 1. Header = Algorithmus, 2. = Payload = nicht verschlüsselt (Bernd), 3. Verifizierungssignatur = wie werden Daten verschlüsselt, mit Secret (wie Fingerabdruck)
 // npm jasonwebtoken
+
+
+
+// ! Cookie (parser) Test
+/* userRouter.get("/secure/cookieTest", authenticateToken, async (req, res) => {
+
+})
+ */
+
+// # Clerk.com / firebase.com / superbase.com /auth0.com -> erstellen einem den ganzen Auth./Login Kram
+
 
 
 

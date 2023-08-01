@@ -1,4 +1,4 @@
-import jwt from "jasonwebtoken";
+/* import jwt from "jasonwebtoken";
 
 //userEmailObj = {email: ""}
 //persist = eingeloggt bleiben
@@ -7,7 +7,7 @@ export function generateAccessToken(userEmailObj, persist){
     });
 }
 
-// in node bubble: require ("crypto").randomBytes(64).toString("hex") => in console
+// in node bubble: node +  require ("crypto").randomBytes(64).toString("hex") => in console
 
 // generiert TOKEN_SECRET String, den dann in .env packen 
 
@@ -43,4 +43,4 @@ export function authentificateToken (req, res, next){
         next();
         // wenn es passt gehe weiter zur nächsten Middelware
     });
-}
+} */
