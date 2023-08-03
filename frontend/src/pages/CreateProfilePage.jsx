@@ -21,9 +21,9 @@ const CreateProfilePage = () => {
       });
       const { data } = response;
       nav("/LoginPage");
-      console.log("successful", data);
+      console.log("User successfully created", data);
     } catch (error) {
-      console.log(error, "Registration gescheitert");
+      console.log(error, "Registration failed");
     }
   };
 

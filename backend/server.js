@@ -11,7 +11,7 @@ import {User} from "./models/UserModel.js";
 import { userRouter } from "./routes.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-//import cookieParser from "cookie-parser";
+import cookieParser from "cookie-parser";
 // AUT
 
 //const test = dotenv.config({path:new URL ("../.env", import.meta.url).pathname})
@@ -35,8 +35,8 @@ app.use("/api", userRouter);
 // für gleichzeitiges starten von back und frontend
 
 
-/* // ! für Cookie
-app.use(cookieParser()) */
+// ! für Cookie
+app.use(cookieParser()) 
           
 cloudinary.config({ 
   cloud_name: process.env.CLOUDINARY_CLOUDNAME, 
