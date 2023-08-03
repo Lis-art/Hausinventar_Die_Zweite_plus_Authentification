@@ -1,8 +1,8 @@
 
 import User from "./models/UserModel.js";
 import { Router } from "express";
-import { authenticateToken, generateAccessToken } from "./authToken.js";
-import cookieParser from 'cookie-parser';
+import { authentificateToken, generateAccessToken } from "./authToken.js";
+
 
 // MULTER ???
 
@@ -73,7 +73,7 @@ userRouter.post("/user/login", async (req, res) => {
 
 
 // ! Cookie (parser) Test
-userRouter.get("/secure/cookieTest", authenticateToken, async (req, res) => {
+userRouter.get("/secure/cookieTest", authentificateToken, async (req, res) => {
   console.log(req.userEmail);
   res.send("SUCCESS SECURE PATH")
 })

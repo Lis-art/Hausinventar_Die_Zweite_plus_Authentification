@@ -1,5 +1,5 @@
-import jwt from "jasonwebtoken";
-import cookieParser from 'cookie-parser';
+import jwt from "jsonwebtoken";
+
 
 //userEmailObj = {email: ""}
 //persist = eingeloggt bleiben
