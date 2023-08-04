@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 //import {Schema, model} from "mongoose"; -< UNTEN DANN NUR NEW SCHEMA
 import crypto from "crypto";
+
 const userSchema = new mongoose.Schema({
     email: {
       type: String,

@@ -7,11 +7,14 @@ const LoginPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
 
   const nav = useNavigate();
 
   const login = async (e) => {
     e.preventDefault();
+
+    setError(null);
 
     try {
       const response = await axios.post("/api/user/login", {
@@ -22,8 +25,8 @@ const LoginPage = () => {
       const { data } = response;
       nav("/ProfilePage");
       console.log("successful", data);
-    } catch (error) {
-      console.log(error, "Login gescheitert");
+    } catch (e) {
+      console.log(e, "Login failed, please try again later");
     }
   };
 
