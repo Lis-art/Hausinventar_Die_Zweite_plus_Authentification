@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Nav from "../components/nav/nav";
+import { UserContext } from "../user/UserContext";
 
 const LoginPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+
+  const { refetch } = useContext(UserContext);
 
   const nav = useNavigate();
 
@@ -22,8 +25,11 @@ const LoginPage = () => {
         email,
         password,
       });
-      const { data } = response;
-      nav("/ProfilePage");
+
+      refetch();
+
+      const { data } = response.data;
+      nav(`/ProfilePage/${data._id}`);
       console.log("successful", data);
     } catch (e) {
       console.log(e, "Login failed, please try again later");

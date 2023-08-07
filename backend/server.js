@@ -1,22 +1,20 @@
-
-import "./config/config.js"
-import {v2 as cloudinary} from 'cloudinary';
+import "./config/config.js";
+import { v2 as cloudinary } from "cloudinary";
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import multer from "multer";
 import "./models/index.js";
 import { Inventory } from "./models/InventarModel.js";
-import {User} from "./models/UserModel.js";
+import { User } from "./models/UserModel.js";
 import { userRouter } from "./routes.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-// AUT
+
 
 //const test = dotenv.config({path:new URL ("../.env", import.meta.url).pathname})
 //console.log(test);
-
 /* await mongoose.connect(process.env.MONGO_URI);
 app.use("/api", userRouter); */
 

@@ -10,7 +10,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose"; 
 import path from "path";
 
-import { userRouter } from "../routes.js";
+
 
 dotenv.config({
   path: path.join(path.resolve(), "..", ".env"),

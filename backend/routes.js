@@ -1,9 +1,8 @@
-
-import User from "./models/UserModel.js";
 import { Router } from "express";
-import { authentificateToken, generateAccessToken } from "./authToken.js";
 import multer from "multer";
-
+import User from "./models/UserModel.js";
+import { authentificateToken, generateAccessToken } from "./authToken.js";
+import { createResetToken } from "./models/resetTokenModel.js";
 
 export const userRouter = Router();
 
@@ -22,7 +21,6 @@ userRouter.get("/user/aut", async (req, res) => {
 
 
 // ! SignUp / Create Profile
-// # hat er etwas anders !
 userRouter.post("/user/signup", multerMiddleware.none(), async (req, res) => {
   const { name, email, password } = req.body;
   let user = new User({ name, email });
@@ -100,6 +98,21 @@ userRouter.get("/secure", async (req, res) => {
     });
   }
 }); */
+
+
+// ! Logout
+userRouter.get("/logout", (req, res) => {
+  res.clearCookie("auth");
+  res.send("OK");
+});
+
+// ! Secure
+userRouter.get("/secure", authentificateToken, async (req, res) => {
+  console.log(req.userEmail);
+  res.send({ email: req.userEmail });
+});
+
+
 
 
 

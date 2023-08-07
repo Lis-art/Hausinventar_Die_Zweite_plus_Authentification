@@ -1,11 +1,12 @@
-import User from "./UserModel.js"
-import {Schema, model} from mongoose;
+import User from "./UserModel.js";
+import { Schema, model } from "mongoose";
 import crypto from "crypto";
 import { passwordResetMailTemplate } from "../lib/mailTemplates.js";
+import { sendMail } from "../lib/sendMail.js";
 
-const restTokenSchema = new Schema ({
+const resetTokenSchema = new Schema ({
     userId: {
-        type: Schema.types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "User",
         required: true,
     },
@@ -20,7 +21,7 @@ const restTokenSchema = new Schema ({
         // in sek 2h
     }
 });
-export const ResetToken = model("ResetToken", restTokenSchema);
+export const ResetToken = model("ResetToken", resetTokenSchema);
 
 
 export const createResetToken = async (userEmail) => {
@@ -61,4 +62,18 @@ export const createResetToken = async (userEmail) => {
         subject: `${process.env.APP_NAME} Password Reset!`,
         html: mailHTML,
     });
-}
+};
+
+export const validateResetToken = async (userId, resetToken) => {
+    const passwordResetToken = await ResetToken.findOne({ userId }).populate(
+      "userId"
+    );
+  
+    if (!passwordResetToken) {
+      throw new Error("Token expired");
+    }
+  
+    const isValid = resetToken === passwordResetToken.token;
+  
+    return isValid;
+};
