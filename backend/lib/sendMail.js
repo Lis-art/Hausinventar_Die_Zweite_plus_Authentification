@@ -20,8 +20,7 @@ export const sendMail = async ({to, subject, html} = defaultOptions) => {
         mg = mailgun.client({
         username: "api",
         key: 
-            process.env.MAILGUN_API_KEY || 
-            "577ee04b1568472d4ffae3ff71b357f8-4e034d9e-03566aa7",
+            process.env.MAILGUN_API_KEY 
         });  
     }
     
