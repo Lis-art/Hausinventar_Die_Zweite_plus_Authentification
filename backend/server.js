@@ -18,6 +18,8 @@ import cookieParser from "cookie-parser";
 /* await mongoose.connect(process.env.MONGO_URI);
 app.use("/api", userRouter); */
 
+await mongoose.connect(process.env.MONGO_URI);
+await mongoose.connection.syncIndexes();
 
 const app = express();
 const PORT = 3001;
@@ -26,6 +28,15 @@ const upload = multer({storage:multer.memoryStorage()});
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors())
+app.use(cookieParser()) 
+
+/*
+ * express.static matched auf jede Datei im angegebenen Ordner
+ * und erstellt uns einen request handler for FREE
+ * app.get("/",(req,res)=> res.sendFile("path/to/index.html"))
+ * app.get("/index.html",(req,res)=> res.sendFile("path/to/index.html"))
+ */
+
 
 //AUT
 app.use("/api", userRouter);
@@ -33,8 +44,6 @@ app.use("/api", userRouter);
 // für gleichzeitiges starten von back und frontend
 
 
-// ! für Cookie
-app.use(cookieParser()) 
           
 cloudinary.config({ 
   cloud_name: process.env.CLOUDINARY_CLOUDNAME, 
@@ -45,6 +54,7 @@ cloudinary.config({
 app.get("/api/test", (req,res) => {
     res.send("läuft")
 })
+
 
 // alle Items bekommen
 app.get("/api/inventar", async(req,res) => {

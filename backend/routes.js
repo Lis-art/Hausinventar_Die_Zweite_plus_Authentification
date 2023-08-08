@@ -20,29 +20,91 @@ userRouter.get("/user/aut", async (req, res) => {
 });
 
 
+
+// ! password reset - Mail
+userRouter.post("/resetPassword", async (req, res) => {
+  const { email } = req.body;
+  try {
+    console.log("reset password for ", email);
+    await createResetToken(email);
+    return res.sendStatus(200);
+  } catch (e) {
+    if (e?.message === "No User with this email") {
+      return res.status(404).send({ error: "User not found" });
+    }
+
+    return res.status(500).send({ error: "Unknown Error occurred" });
+  }
+});
+
+// ! confirm password reset - Mail
+userRouter.post("/resetPassword-confirm", async (req, res) => {
+  const { id, token, password } = req.body;
+  const isValidResetProcess = validateResetToken(id, token);
+  try {
+    if (!isValidResetProcess) {
+      throw new Error("NonValidResetProcess");
+    }
+
+    const user = await User.findById(id);
+    user.setPassword(password);
+
+    await user.save();
+    return res.send({
+      data: { message: "New password confirmed" },
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).send({ error: "Something went wrong" });
+  }
+});
+
+
+
+
+
 // ! SignUp / Create Profile
 userRouter.post("/user/signup", multerMiddleware.none(), async (req, res) => {
-  const { name, email, password } = req.body;
-  let user = new User({ name, email });
-  user.setPassword(password);
-  console.log(password);
-
+  // Neuen User erstellen
+  const { name, email } = req.body;
+  const newUser = new User({ name, email });
+  // user.setPassword (hash und salt setzen)
+  newUser.setPassword(req.body.password);
+  // user speichern
   try {
-    user = await user.save();
-    return res.send({ message: "New user created", data: user });
-  } catch (error) {
-    console.log(error);
+    await newUser.save();
+    return res.send({
+      data: {
+        message: "New user created",
+        user: { name, email },
+      },
+    });
+  } catch (e) {
+    console.log(e);
+    if (e.name === "ValidationError") {
+      return res.status(400).send({ error: e });
+    }
+
+    // Duplication Error email existiert bereits als user
+    if (e.name === "MongoServerError" && e.code === 11000) {
+      console.log("Account exists already");
+      return res.status(400).send({
+        error: { message: "Username and Password combination not valid" },
+      });
+    }
+
+    return res.status(500).send({ error: { message: "Unknown Server error" } });
   }
-  return res.status(500).send({error: "An unkonown error ocurred"});
 });
-// # Duplication error fehlt hier
 
 
 // ! Login
 userRouter.post("/user/login", multerMiddleware.none(), async (req, res) => {
   const { email, password } = req.body;
+  console.log({ email, password });
   const user = await User.findOne({ email }).select("+hash").select("+salt");
-
+  // dieses password würde den gleichen hash produzieren
+  // (wie der in der Datenbank)
   const passwordIsValid = user.verifyPassword(password);
   if (passwordIsValid) {
 
@@ -70,15 +132,12 @@ userRouter.post("/user/login", multerMiddleware.none(), async (req, res) => {
 // npm jasonwebtoken
 
 
-
-// ! Cookie (parser) Test
+/* // ! Cookie (parser) Test
 userRouter.get("/secure/cookieTest", authentificateToken, async (req, res) => {
   console.log(req.userEmail);
   res.send("SUCCESS SECURE PATH")
 })
- 
-
-
+  */
 
 /* 
 userRouter.get("/secure", async (req, res) => {
@@ -116,24 +175,9 @@ userRouter.get("/secure", authentificateToken, async (req, res) => {
 
 
 
-//# mail
 
-userRouter.post("/resetPassword", async (req,res) =>{
-  const {email} = req.body;
-  try {
-    await createResetToken(email)
-    return res.sendStatus(200)
-  } catch (error) {
-    if(error?.message === "No User with this email"){
-      return res.status(404).send({error: "User not found"})
-    }
-    return res.status(500).send({error: "Unknown Error occurred"});
-  }
-  
-});
-
+// Anleitung Mail testen (s.oben):
 // zum testen neuen user erstellen mit eigener Email(von mailGun anmeldung) den user dann in db posten
-
 // email adresse auf mailgun verifizieren - sending - domain - rechts author.Recip. - input feld- trash mail eingeben - save 
 // trashmail öffnen und so lange öffnen bis verif.mail ankommt
 // mail öffnen - verifizieren

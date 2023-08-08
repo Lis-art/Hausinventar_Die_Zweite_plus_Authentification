@@ -4,6 +4,8 @@ import crypto from "crypto";
 import { passwordResetMailTemplate } from "../lib/mailTemplates.js";
 import { sendMail } from "../lib/sendMail.js";
 
+// ! Token sollte nicht länger als einen Tag gültig sein!
+
 const resetTokenSchema = new Schema ({
     userId: {
         type: Schema.Types.ObjectId,
@@ -25,6 +27,7 @@ export const ResetToken = model("ResetToken", resetTokenSchema);
 
 
 export const createResetToken = async (userEmail) => {
+    //prüft ob es den User gibt
     const user = await User.findOne({email: userEmail});
     if (!user){
         throw new Error("No User with this email")

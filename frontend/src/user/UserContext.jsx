@@ -12,7 +12,7 @@ export const UserProvider = ({ children }) => {
   const refetch = () => _refetch((prev) => !prev);
 
   const logout = async () => {
-    await axios.get("/api/logout");
+    await axios.get("/logout");
     setUser(null);
     nav("/");
   };

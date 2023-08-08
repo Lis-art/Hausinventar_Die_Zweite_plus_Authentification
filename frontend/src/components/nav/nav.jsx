@@ -25,7 +25,7 @@ const Nav = () => {
         {!isLoggedIn && (
           <>
             <NavLink className="linkNav" to="/CreateProfile">
-              Sign Up
+              SIGN UP
             </NavLink>
             <NavLink className="linkNav" to="/LoginPage">
               LOGIN

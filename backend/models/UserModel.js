@@ -1,27 +1,36 @@
 import mongoose from "mongoose";
 //import {Schema, model} from "mongoose"; -< UNTEN DANN NUR NEW SCHEMA
 import crypto from "crypto";
+import { Schema, model } from "mongoose";
 
-const userSchema = new mongoose.Schema({
+const isEmail = (string) => {
+    const [name, domainWithTLD, ...rest] = string.split("@");
+    if (rest.length || !name || !domainWithTLD) {
+      return false;
+    }
+  
+    const [domain, tld] = domainWithTLD.split(".");
+    if (tld.length < 2 || !domain) return false;
+  
+    return true;
+  };
+  
+  export const userSchema = new Schema({
+    name: { type: String, required: [true, "Please specify your name"] },
     email: {
       type: String,
       unique: true,
-      lowercase: true 
+      index: true,
+      lowercase: true,
+      validate: {
+        validator: isEmail,
+        message: (props) => `${props.value} is not a valid email`,
+      },
     },
-    salt:{type: String, required:true, select: false},
-    hash:{type: String, required:true, select: false},
-
-
-    name: String,
-    description: String,
-    image: {
-        type: {
-            url: String,
-            imageId: String
-        }
-    },
-   // inventory: [{type: mongoose.Types.ObjectId, ref: "Inventory"}]
-});
+    salt: { type: String, required: true, select: false },
+    hash: { type: String, required: true, select: false },
+  });
+  
 
 
 userSchema.methods.setPassword = function (password){
